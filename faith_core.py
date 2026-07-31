@@ -129,6 +129,11 @@ def lookup_definition(ai, word):
     if definition:
         ai.intent_memory.setdefault(dict_key, [])
         ai.intent_memory[dict_key].append(definition)
+        qa_pair = {"question": f"what does {word} mean", "answer": definition}
+        if qa_pair not in ai.dataset:
+            ai.dataset.append(qa_pair)
+            if ai.model:
+                ai.fine_tune(steps=1)
         save_state(ai.dataset, ai.intent_memory)
         return definition, False
  
